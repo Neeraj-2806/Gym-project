@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gym-project
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gym-project
+  template:
+    metadata:
+      labels:
+        app: gym-project
+    spec:
+      containers:
+      - name: ctr-1
+        image: mohit993/gym-devops
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
