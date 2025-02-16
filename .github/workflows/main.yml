@@ -1,0 +1,30 @@
+name: CI/CD pipeline for gymapp
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main 
+jobs: 
+  build-and-deploy:
+   runs-on: ubuntu-latest
+
+   steps:
+     - name: checkout repository
+       uses: actions/checkout@v4
+     - name: build docker image 
+       run: docker build -t gym-app:latest .
+     - name: docker login 
+       env: 
+         DOCKER_USER: ${{secrets.DOCKERHUB_USERNAME}}
+         DOCKER_PASS: ${{secrets.DOCKERHUB_PASSWORD}}
+       run: | 
+         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+     - name: tag and push to docker hub
+       run: |
+         docker tag gym-app "$DOCKER_USER"/gym-app:latest
+         docker push "$DOCKER_USER"/gym-app:latest
+       
+       
